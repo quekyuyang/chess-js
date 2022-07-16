@@ -1,0 +1,22 @@
+div.chessboard {
+  display: grid;
+  grid-template-columns: repeat(8, 100px);
+  grid-auto-rows: 100px;
+}
+
+div.light-square {
+  background-color: #f7b365;
+}
+
+div.dark-square {
+  background-color: #ab5e05;
+}
+
+.chess-piece {
+  position: relative;
+  height: 80%;
+  width: 40%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
