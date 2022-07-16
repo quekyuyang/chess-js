@@ -1,4 +1,7 @@
-function addPickupEvent(elem, renderer) {
+import { Vector } from "./Position.mjs"
+
+
+function addPickupEvent(elem, renderer, move_manager) {
   elem.addEventListener("mousedown", pickup);
 
   function pickup(event) {
@@ -27,10 +30,14 @@ function addPickupEvent(elem, renderer) {
       let elements_at_pos = document.elementsFromPoint(event.pageX, event.pageY);
       for (let element of elements_at_pos) {
         if (element.classList.contains("square")) {
-          element.append(this);
+          const chesspieces = move_manager.chesspieces;
+          const chesspiece = chesspieces.find(chesspiece => chesspiece.img_elem == this);
+
+          move_manager.move_piece(chesspiece, new Vector(parseInt(element.dataset.col), parseInt(element.dataset.row)));
           this.style.position = "relative";
           this.style.left = "50%";
           this.style.top = "50%";
+          renderer.update();
         }
       }
       renderer.clear_moves();

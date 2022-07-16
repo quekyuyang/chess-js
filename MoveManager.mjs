@@ -2,22 +2,40 @@ import { Vector } from "./Position.mjs"
 
 
 class MoveManager {
-  constructor(chessboard) {
+  constructor(chessboard, chesspieces) {
     this.chessboard = chessboard;
+    this.chesspieces = chesspieces;
     this.player_turn = 1;
     this.pins1 = [];
     this.pins2 = [];
+    this.movesets = {};
+  }
+
+  update_moves() {
+    for (const chesspiece of this.chesspieces) {
+      console.log(chesspiece.img_elem.id);
+      let moveset = generate_moveset(chesspiece, chesspiece.move_type, this.chessboard);
+      if (chesspiece.player == 1)
+        moveset = filter_moveset_pins(chesspiece, moveset, this.pins1);
+      else
+        moveset = filter_moveset_pins(chesspiece, moveset, this.pins2);
+
+      this.movesets[chesspiece.img_elem.id] = moveset;
+    }
   }
 
   get_moves(chesspiece) {
-    let moveset = generate_moveset(chesspiece, chesspiece.move_type, this.chessboard);
+    return this.movesets[chesspiece.img_elem.id];
+  }
 
-    if (chesspiece.player == 1)
-      moveset = filter_moveset_pins(chesspiece, moveset, this.pins1);
-    else
-      moveset = filter_moveset_pins(chesspiece, moveset, this.pins2);
-
-    return moveset;
+  move_piece(chesspiece, pos) {
+    const move = this.movesets[chesspiece.img_elem.id].find(move => move.pos.equals(pos));
+    if (move) {
+      this.chessboard[chesspiece.pos.y][chesspiece.pos.x] = null;
+      this.chessboard[move.pos.y][move.pos.x] = chesspiece;
+      chesspiece.pos = pos;
+      this.update_moves();
+    }
   }
 }
 
@@ -95,6 +113,8 @@ function generate_moveset(chesspiece, move_type, chessboard) {
       return generate_moveset_bishop(chesspiece.pos, chessboard);
     case 'queen':
       let moveset = generate_moveset_rook(chesspiece.pos, chessboard);
+      console.log(chesspiece.pos);
+      console.log(chessboard);
       moveset = moveset.concat(generate_moveset_bishop(chesspiece.pos,chessboard));
       return moveset;
   }
@@ -125,7 +145,6 @@ function generate_moveset_rook(pos, chessboard) {
   }
 
   for (let y = pos.y + 1; y < 8; y++) {
-    console.log(chessboard[y][pos.x]);
     if (!chessboard[y][pos.x])
       moveset.push({pos: new Vector(pos.x, y), capture: null});
     else

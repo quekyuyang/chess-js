@@ -1,7 +1,6 @@
 class Renderer {
-  constructor(move_manager, chesspieces) {
+  constructor(move_manager) {
     this.move_manager = move_manager;
-    this.chesspieces = chesspieces;
     this.chesspieces_moves = [];
     this.div_array = create_chessboard_div_array();
   }
@@ -15,10 +14,9 @@ class Renderer {
     }
 
     this.chesspieces_moves = []
-    for (const chesspiece of this.chesspieces) {
+    for (const chesspiece of this.move_manager.chesspieces) {
       this.chesspieces_moves[chesspiece.img_elem.id] = this.move_manager.get_moves(chesspiece);
     }
-
   }
 
   show_moves(id) {

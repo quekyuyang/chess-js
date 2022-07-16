@@ -50,14 +50,15 @@ function init_chess() {
 
 function main() {
   let [chessboard, chesspieces] = init_chess();
-  let move_manager = new MoveManager(chessboard);
+  let move_manager = new MoveManager(chessboard, chesspieces);
   move_manager.pins1.push({pinned: chessboard[7][3], pinning: chessboard[7][6], king:chessboard[7][1]});
+  move_manager.update_moves();
 
-  let renderer = new Renderer(move_manager, chesspieces);
+  let renderer = new Renderer(move_manager);
   renderer.update();
   for (let chesspiece of chesspieces)
   {
-    addPickupEvent(chesspiece.img_elem, renderer);
+    addPickupEvent(chesspiece.img_elem, renderer, move_manager);
   }
 }
 
