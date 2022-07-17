@@ -5,7 +5,7 @@ class MoveManager {
   constructor(chessboard, chesspieces) {
     this.chessboard = chessboard;
     this.chesspieces = chesspieces;
-    this.player_turn = 1;
+    this.player_turn = 2; // Start with 2 because next_turn will be called for first turn
     this.pins1 = [];
     this.pins2 = [];
     this.movesets = {};
@@ -13,7 +13,6 @@ class MoveManager {
 
   update_moves() {
     for (const chesspiece of this.chesspieces) {
-      console.log(chesspiece.img_elem.id);
       let moveset = generate_moveset(chesspiece, chesspiece.move_type, this.chessboard);
       if (chesspiece.player == 1)
         moveset = filter_moveset_pins(chesspiece, moveset, this.pins1);
@@ -22,6 +21,11 @@ class MoveManager {
 
       this.movesets[chesspiece.img_elem.id] = moveset;
     }
+  }
+
+  next_turn() {
+    this.player_turn = this.player_turn % 2 + 1; // Alternate between 1 and 2
+    this.update_moves();
   }
 
   get_moves(chesspiece) {
@@ -113,8 +117,6 @@ function generate_moveset(chesspiece, move_type, chessboard) {
       return generate_moveset_bishop(chesspiece.pos, chessboard);
     case 'queen':
       let moveset = generate_moveset_rook(chesspiece.pos, chessboard);
-      console.log(chesspiece.pos);
-      console.log(chessboard);
       moveset = moveset.concat(generate_moveset_bishop(chesspiece.pos,chessboard));
       return moveset;
   }

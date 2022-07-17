@@ -43,13 +43,4 @@ function create_chessboard_div_array() {
 }
 
 
-function create_chessboard_array() {
-  let chessboard = new Array(8);
-  for (let i = 0; i < 8; i++) {
-    chessboard[i] = new Array(8).fill(null);
-  }
-  return chessboard;
-}
-
-
-export { Renderer, create_chessboard_array };
+export { Renderer };

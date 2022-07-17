@@ -1,7 +1,24 @@
 import { Rook, Bishop, Queen } from "./ChessPiece.mjs"
-import { Renderer, create_chessboard_array } from "./render.mjs"
+import { Renderer } from "./render.mjs"
 import { MoveManager } from "./MoveManager.mjs"
 import { addPickupEvent } from "./UI.mjs"
+
+
+class Game {
+  constructor() {
+    let [chessboard, chesspieces] = init_chess();
+    this.move_manager = new MoveManager(chessboard, chesspieces);
+    this.renderer = new Renderer(this.move_manager);
+    for (let chesspiece of chesspieces)
+      addPickupEvent(chesspiece.img_elem, this.renderer, this.move_manager, this.next_turn.bind(this));
+    this.next_turn();
+  }
+
+  next_turn() {
+    this.move_manager.next_turn();
+    this.renderer.update();
+  }
+}
 
 
 function init_chess() {
@@ -48,18 +65,16 @@ function init_chess() {
 }
 
 
-function main() {
-  let [chessboard, chesspieces] = init_chess();
-  let move_manager = new MoveManager(chessboard, chesspieces);
-  move_manager.pins1.push({pinned: chessboard[7][3], pinning: chessboard[7][6], king:chessboard[7][1]});
-  move_manager.update_moves();
-
-  let renderer = new Renderer(move_manager);
-  renderer.update();
-  for (let chesspiece of chesspieces)
-  {
-    addPickupEvent(chesspiece.img_elem, renderer, move_manager);
+function create_chessboard_array() {
+  let chessboard = new Array(8);
+  for (let i = 0; i < 8; i++) {
+    chessboard[i] = new Array(8).fill(null);
   }
+  return chessboard;
+}
+
+function main() {
+  let game = new Game();
 }
 
 main();
