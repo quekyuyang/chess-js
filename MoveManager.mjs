@@ -38,7 +38,6 @@ class MoveManager {
       this.chessboard[chesspiece.pos.y][chesspiece.pos.x] = null;
       this.chessboard[move.pos.y][move.pos.x] = chesspiece;
       chesspiece.pos = pos;
-      this.update_moves();
     }
   }
 }
