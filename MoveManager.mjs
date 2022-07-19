@@ -2,25 +2,21 @@ import { Vector } from "./Position.mjs"
 
 
 class MoveManager {
-  constructor(chessboard, chesspieces) {
+  constructor(chessboard, chesspieces1, chesspieces2) {
     this.chessboard = chessboard;
-    this.chesspieces = chesspieces;
     this.player_turn = 2; // Start with 2 because next_turn will be called for first turn
+    this.chesspieces1 = chesspieces1;
+    this.chesspieces2 = chesspieces2;
     this.pins1 = [];
     this.pins2 = [];
     this.movesets = {};
   }
 
   update_moves() {
-    for (const chesspiece of this.chesspieces) {
-      let moveset = generate_moveset(chesspiece, chesspiece.move_type, this.chessboard);
-      if (chesspiece.player == 1)
-        moveset = filter_moveset_pins(chesspiece, moveset, this.pins1);
-      else
-        moveset = filter_moveset_pins(chesspiece, moveset, this.pins2);
-
-      this.movesets[chesspiece.img_elem.id] = moveset;
-    }
+    if (this.player_turn == 1)
+      this.movesets = get_valid_moves(this.chesspieces1, this.chessboard, this.pins1);
+    else
+      this.movesets = get_valid_moves(this.chesspieces2, this.chessboard, this.pins2);
   }
 
   next_turn() {
@@ -38,7 +34,17 @@ class MoveManager {
       this.chessboard[chesspiece.pos.y][chesspiece.pos.x] = null;
       this.chessboard[move.pos.y][move.pos.x] = chesspiece;
       chesspiece.pos = pos;
+      return true;
     }
+    else
+      return false;
+  }
+
+  is_movable(id) {
+    if (this.player_turn == 1)
+      return this.chesspieces1.some(chesspiece => chesspiece.img_elem.id == id);
+    else
+      return this.chesspieces2.some(chesspiece => chesspiece.img_elem.id == id);
   }
 }
 
@@ -105,6 +111,17 @@ function get_numbers_between(n1, n2) {
     }
   }
   return nums;
+}
+
+
+function get_valid_moves(chesspieces, chessboard, pins) {
+  let movesets = {};
+  for (const chesspiece of chesspieces) {
+    let moveset = generate_moveset(chesspiece, chesspiece.move_type, chessboard);
+    moveset = filter_moveset_pins(chesspiece, moveset, pins);
+    movesets[chesspiece.img_elem.id] = moveset;
+  }
+  return movesets;
 }
 
 

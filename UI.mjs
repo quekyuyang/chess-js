@@ -5,42 +5,46 @@ function addPickupEvent(elem, renderer, move_manager, next_turn_callback) {
   elem.addEventListener("mousedown", pickup);
 
   function pickup(event) {
-    let piece = this;
-    let bound_rect = this.getBoundingClientRect();
+    if (move_manager.is_movable(this.id)) {
+      let piece = this;
+      let bound_rect = this.getBoundingClientRect();
 
-    this.style.width = bound_rect.width;
-    this.style.height = bound_rect.height;
-    this.style.position = "absolute";
-    this.style.left = event.pageX;
-    this.style.top = event.pageY;
+      this.style.width = bound_rect.width;
+      this.style.height = bound_rect.height;
+      this.style.position = "absolute";
+      this.style.left = event.pageX;
+      this.style.top = event.pageY;
 
-    renderer.show_moves(this.id);
+      renderer.show_moves(this.id);
 
-    let chessboard = document.querySelector(".chessboard");
-    chessboard.addEventListener("mousemove", move);
-    this.addEventListener("mouseup", drop);
+      let chessboard = document.querySelector(".chessboard");
+      chessboard.addEventListener("mousemove", move);
+      this.addEventListener("mouseup", drop);
 
-    function move(event) {
-      piece.style.left = event.pageX;
-      piece.style.top = event.pageY;
-    }
+      function move(event) {
+        piece.style.left = event.pageX;
+        piece.style.top = event.pageY;
+      }
 
-    function drop(event) {
-      chessboard.removeEventListener("mousemove", move);
-      renderer.clear_moves();
-      let elements_at_pos = document.elementsFromPoint(event.pageX, event.pageY);
-      for (let element of elements_at_pos) {
-        if (element.classList.contains("square")) {
-          const chesspieces = move_manager.chesspieces;
-          const chesspiece = chesspieces.find(chesspiece => chesspiece.img_elem == this);
-          move_manager.move_piece(chesspiece, new Vector(parseInt(element.dataset.col), parseInt(element.dataset.row)));
-          this.style.position = "relative";
-          this.style.left = "50%";
-          this.style.top = "50%";
-          break;
+      function drop(event) {
+        chessboard.removeEventListener("mousemove", move);
+        this.removeEventListener("mouseup", drop);
+        renderer.clear_moves();
+        this.style.position = "relative";
+        this.style.left = "50%";
+        this.style.top = "50%";
+        let elements_at_pos = document.elementsFromPoint(event.pageX, event.pageY);
+        for (let element of elements_at_pos) {
+          if (element.classList.contains("square")) {
+            let chesspiece = move_manager.chesspieces1.find(chesspiece => chesspiece.img_elem == this);
+            if (!chesspiece)
+              chesspiece = move_manager.chesspieces2.find(chesspiece => chesspiece.img_elem == this);
+            if (move_manager.move_piece(chesspiece, new Vector(parseInt(element.dataset.col), parseInt(element.dataset.row))))
+              next_turn_callback();
+            break;
+          }
         }
       }
-      next_turn_callback();
     }
   }
 }

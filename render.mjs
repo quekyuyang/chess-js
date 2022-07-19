@@ -13,8 +13,11 @@ class Renderer {
         squares[i].append(chessboard[i].img_elem);
     }
 
-    this.chesspieces_moves = []
-    for (const chesspiece of this.move_manager.chesspieces) {
+    this.chesspieces_moves = [];
+    for (const chesspiece of this.move_manager.chesspieces1) {
+      this.chesspieces_moves[chesspiece.img_elem.id] = this.move_manager.get_moves(chesspiece);
+    }
+    for (const chesspiece of this.move_manager.chesspieces2) {
       this.chesspieces_moves[chesspiece.img_elem.id] = this.move_manager.get_moves(chesspiece);
     }
   }
