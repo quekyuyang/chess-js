@@ -36,10 +36,7 @@ function addPickupEvent(elem, renderer, move_manager, next_turn_callback) {
         let elements_at_pos = document.elementsFromPoint(event.pageX, event.pageY);
         for (let element of elements_at_pos) {
           if (element.classList.contains("square")) {
-            let chesspiece = move_manager.chesspieces1.find(chesspiece => chesspiece.img_elem == this);
-            if (!chesspiece)
-              chesspiece = move_manager.chesspieces2.find(chesspiece => chesspiece.img_elem == this);
-            if (move_manager.move_piece(chesspiece, new Vector(parseInt(element.dataset.col), parseInt(element.dataset.row))))
+            if (move_manager.move_piece(this.id, new Vector(parseInt(element.dataset.col), parseInt(element.dataset.row))))
               next_turn_callback();
             break;
           }

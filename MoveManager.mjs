@@ -28,8 +28,15 @@ class MoveManager {
     return this.movesets[chesspiece.img_elem.id];
   }
 
-  move_piece(chesspiece, pos) {
-    const move = this.movesets[chesspiece.img_elem.id].find(move => move.pos.equals(pos));
+  move_piece(id, pos) {
+    if (this.player_turn == 1)
+      var chesspiece = this.chesspieces1.find(chesspiece => chesspiece.img_elem.id == id);
+    else
+      var chesspiece = this.chesspieces2.find(chesspiece => chesspiece.img_elem.id == id);
+    if (!chesspiece)
+      throw "Attempt to move non-active player's chess piece or chess piece unregistered in MoveManager";
+      
+    const move = this.movesets[id].find(move => move.pos.equals(pos));
     if (move) {
       this.chessboard[chesspiece.pos.y][chesspiece.pos.x] = null;
       this.chessboard[move.pos.y][move.pos.x] = chesspiece;
