@@ -2,11 +2,11 @@ import { Vector } from "./Position.mjs"
 
 
 class MoveManager {
-  constructor(chessboard, chesspieces1, chesspieces2) {
-    this.chessboard = chessboard;
+  constructor(chessboard) {
+    this.chessboard = chessboard.chessboard;
     this.player_turn = 2; // Start with 2 because next_turn will be called for first turn
-    this.chesspieces1 = chesspieces1;
-    this.chesspieces2 = chesspieces2;
+    this.chesspieces1 = chessboard.chesspieces1;
+    this.chesspieces2 = chessboard.chesspieces2;
     this.pins1 = [];
     this.pins2 = [];
     this.movesets = {};
@@ -35,7 +35,7 @@ class MoveManager {
       var chesspiece = this.chesspieces2.find(chesspiece => chesspiece.img_elem.id == id);
     if (!chesspiece)
       throw "Attempt to move non-active player's chess piece or chess piece unregistered in MoveManager";
-      
+
     const move = this.movesets[id].find(move => move.pos.equals(pos));
     if (move) {
       this.chessboard[chesspiece.pos.y][chesspiece.pos.x] = null;
