@@ -7,6 +7,7 @@ class MoveManager {
     this.player_turn = 2; // Start with 2 because next_turn will be called for first turn
     this.chesspieces1 = chessboard.chesspieces1;
     this.chesspieces2 = chessboard.chesspieces2;
+    this.graveyard = [];
     this.pins1 = [];
     this.pins2 = [];
     this.movesets = {};
@@ -38,6 +39,8 @@ class MoveManager {
 
     const move = this.movesets[id].find(move => move.pos.equals(pos));
     if (move) {
+      if (move.capture)
+        this.capture_piece(move.capture);
       this.chessboard[chesspiece.pos.y][chesspiece.pos.x] = null;
       this.chessboard[move.pos.y][move.pos.x] = chesspiece;
       chesspiece.pos = pos;
@@ -45,6 +48,19 @@ class MoveManager {
     }
     else
       return false;
+  }
+
+  capture_piece(captured) {
+    this.chessboard[captured.pos.y][captured.pos.x] = null;
+    if (this.player_turn == 1) {
+      let index = this.chesspieces2.findIndex(chesspiece => chesspiece === captured);
+      this.chesspieces2.splice(index, 1);
+    }
+    else {
+      let index = this.chesspieces1.findIndex(chesspiece => chesspiece === captured);
+      this.chesspieces1.splice(index, 1);
+    }
+    this.graveyard.push(captured);
   }
 
   is_movable(id) {

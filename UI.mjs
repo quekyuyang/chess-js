@@ -13,6 +13,7 @@ function addPickupEvent(elem, renderer, move_manager, next_turn_callback) {
       this.style.position = "absolute";
       this.style.left = event.pageX;
       this.style.top = event.pageY;
+      this.style.zIndex = 100; // image must be on top for drop event to work
 
       renderer.show_moves(this.id);
 
@@ -34,6 +35,7 @@ function addPickupEvent(elem, renderer, move_manager, next_turn_callback) {
     this.style.position = "relative";
     this.style.left = "50%";
     this.style.top = "50%";
+    this.style.zIndex = 0;
     let elements_at_pos = document.elementsFromPoint(event.pageX, event.pageY);
     for (let element of elements_at_pos) {
       if (element.classList.contains("square")) {

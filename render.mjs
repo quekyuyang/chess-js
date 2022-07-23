@@ -6,6 +6,11 @@ class Renderer {
   }
 
   update() {
+    for (let chesspiece of this.move_manager.graveyard) {
+      chesspiece.img_elem.style.position = "absolute";
+      chesspiece.img_elem.style.left = -1000;
+    }
+
     const chessboard = this.move_manager.chessboard.flat();
     let squares = document.querySelectorAll("div.chessboard div");
     for (let i = 0; i < chessboard.length; i++) {
