@@ -187,7 +187,10 @@ function generate_moveset_line(pos_start, vector_increment, chessboard) {
   for (let pos = Vector.sum(pos_start, vector_increment); is_within_chessboard(pos); pos = Vector.sum(pos, vector_increment)) {
     if (!chessboard[pos.y][pos.x])
       moveset.push({pos: new Vector(pos.x, pos.y), capture: null});
-    else{
+    else if (chessboard[pos_start.y][pos_start.x].player == chessboard[pos.y][pos.x].player) {
+      break;
+    }
+    else {
       moveset.push({pos: new Vector(pos.x, pos.y), capture: chessboard[pos.y][pos.x]});
       break;
     }
