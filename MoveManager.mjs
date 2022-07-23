@@ -162,48 +162,11 @@ function generate_moveset(chesspiece, move_type, chessboard) {
 }
 
 
-function generate_moveset_rook(pos, chessboard) {
-  let moveset = [];
-
-  for (let x = pos.x + 1; x < 8; x++) {
-    if (!chessboard[pos.y][x])
-      moveset.push({pos: new Vector(x, pos.y), capture: null});
-    else
-    {
-      moveset.push({pos: new Vector(x, pos.y), capture: chessboard[pos.y][x]});
-      break;
-    }
-  }
-
-  for (let x = pos.x - 1; x >= 0; x--) {
-    if (!chessboard[pos.y][x])
-      moveset.push({pos: new Vector(x, pos.y), capture: null});
-    else
-    {
-      moveset.push({pos: new Vector(x, pos.y), capture: chessboard[pos.y][x]});
-      break;
-    }
-  }
-
-  for (let y = pos.y + 1; y < 8; y++) {
-    if (!chessboard[y][pos.x])
-      moveset.push({pos: new Vector(pos.x, y), capture: null});
-    else
-    {
-      moveset.push({pos: new Vector(pos.x, y), capture: chessboard[y][pos.x]});
-      break;
-    }
-  }
-
-  for (let y = pos.y - 1; y >= 0; y--) {
-    if (!chessboard[y][pos.x])
-      moveset.push({pos: new Vector(pos.x, y), capture: null});
-    else
-    {
-      moveset.push({pos: new Vector(pos.x, y), capture: chessboard[y][pos.x]});
-      break;
-    }
-  }
+function generate_moveset_rook(pos_start, chessboard) {
+  let moveset = generate_moveset_line(pos_start, new Vector(1, 0), chessboard);
+  moveset = moveset.concat(generate_moveset_line(pos_start, new Vector(-1, 0), chessboard));
+  moveset = moveset.concat(generate_moveset_line(pos_start, new Vector(0, 1), chessboard));
+  moveset = moveset.concat(generate_moveset_line(pos_start, new Vector(0, -1), chessboard));
 
   return moveset;
 }
