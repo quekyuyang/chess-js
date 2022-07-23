@@ -34,4 +34,12 @@ class Queen extends ChessPiece {
 }
 
 
-export { Rook, Bishop, Queen };
+class Knight extends ChessPiece {
+  constructor(player_n, y, x, img_elem) {
+    super(player_n, y, x, img_elem);
+    this.move_type = "knight";
+  }
+}
+
+
+export { Rook, Bishop, Queen, Knight };

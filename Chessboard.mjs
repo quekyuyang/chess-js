@@ -1,4 +1,4 @@
-import { Rook, Bishop, Queen } from "./ChessPiece.mjs"
+import { Rook, Bishop, Queen, Knight } from "./ChessPiece.mjs"
 import { Vector } from "./Position.mjs"
 
 
@@ -14,6 +14,8 @@ class Chessboard {
     this.add_queen(1, new Vector(5, 3));
     this.add_king(1, new Vector(1, 7));
     this.add_queen(2, new Vector(2, 2));
+    this.add_knight(2, new Vector(1, 0));
+    this.add_knight(2, new Vector(6, 0));
   }
 
   add_rook(player, pos) {
@@ -35,6 +37,13 @@ class Chessboard {
       this.add_piece(player, pos, Queen, "w_queen");
     else
       this.add_piece(player, pos, Queen, "b_queen");
+  }
+
+  add_knight(player, pos) {
+    if (player == 1)
+      this.add_piece(player, pos, Knight, "w_knight");
+    else
+      this.add_piece(player, pos, Knight, "b_knight");
   }
 
   add_king(player, pos) {
