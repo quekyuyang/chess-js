@@ -16,6 +16,10 @@ class Vector {
   static sum(vec1, vec2) {
     return new Vector(vec1.x + vec2.x, vec1.y + vec2.y);
   }
+
+  static diff(vec1, vec2) {
+    return new Vector(vec1.x - vec2.x, vec1.y - vec2.y);
+  }
 }
 
 

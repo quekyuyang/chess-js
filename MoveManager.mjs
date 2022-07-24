@@ -22,6 +22,13 @@ class MoveManager {
 
   next_turn() {
     this.player_turn = this.player_turn % 2 + 1; // Alternate between 1 and 2
+
+    let chesspieces = this.player_turn == 1 ? this.chesspieces1 : this.chesspieces2;
+    for (let chesspiece of chesspieces) {
+      if (chesspiece.vulnerable_to_enpassant)
+        chesspiece.vulnerable_to_enpassant = false;
+    }
+
     this.update_moves();
   }
 
@@ -160,6 +167,8 @@ function generate_moveset(chesspiece, move_type, chessboard) {
       return moveset;
     case 'knight':
       return generate_moveset_knight(chesspiece.pos, chessboard);
+    case 'pawn':
+      return generate_moveset_pawn(chesspiece.pos, chessboard);
   }
 }
 
@@ -225,6 +234,54 @@ function generate_moveset_knight(pos_start, chessboard) {
       moveset.push({pos: pos_abs, capture: null});
     else if (chesspiece_dest.player != chesspiece_moving.player)
       moveset.push({pos: pos_abs, capture: chesspiece_dest});
+  }
+  return moveset;
+}
+
+
+function generate_moveset_pawn(pos_start, chessboard) {
+  let chesspiece_moving = chessboard[pos_start.y][pos_start.x];
+  let dir = chesspiece_moving.player == 1 ? -1 : 1;
+  let moveset = [];
+  let pos_dest = Vector.sum(pos_start, new Vector(0, 1*dir));
+  if (!chessboard[pos_dest.y][pos_dest.x]) {
+    moveset.push({pos: pos_dest, capture: null});
+
+    pos_dest = Vector.sum(pos_start, new Vector(0, 2*dir));
+    if (!chesspiece_moving.has_moved && !chessboard[pos_dest.y][pos_dest.x])
+      moveset.push({pos: pos_dest, capture: null});
+  }
+
+  pos_dest = Vector.sum(pos_start, new Vector(1, 1*dir));
+  let chesspiece_dest = chessboard[pos_dest.y][pos_dest.x];
+  if (chesspiece_dest && chesspiece_dest.player != chesspiece_moving.player)
+    moveset.push({pos: pos_dest, capture: chesspiece_dest});
+
+  pos_dest = Vector.sum(pos_start, new Vector(-1, 1*dir));
+  chesspiece_dest = chessboard[pos_dest.y][pos_dest.x];
+  if (chesspiece_dest && chesspiece_dest.player != chesspiece_moving.player)
+    moveset.push({pos: pos_dest, capture: chesspiece_dest});
+
+  moveset = moveset.concat(generate_enpassant(pos_start, chessboard));
+  return moveset;
+}
+
+
+function generate_enpassant(pos_start, chessboard) {
+  let moveset = [];
+  let chesspiece_moving = chessboard[pos_start.y][pos_start.x];
+  let dir = chesspiece_moving.player == 1 ? -1 : 1;
+
+  let pos_targets = [
+    Vector.sum(pos_start, new Vector(1, 0)),
+    Vector.sum(pos_start, new Vector(-1, 0))
+  ];
+  for (let pos_target of pos_targets) {
+    let chesspiece_target = chessboard[pos_target.y][pos_target.x];
+    if (chesspiece_target && chesspiece_target.vulnerable_to_enpassant) {
+      let pos_dest = Vector.sum(pos_target, new Vector(0, dir));
+      moveset.push({pos: pos_dest, capture: chesspiece_target});
+    }
   }
   return moveset;
 }
