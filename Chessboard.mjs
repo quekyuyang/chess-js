@@ -9,17 +9,25 @@ class Chessboard {
     this.chesspieces1 = [];
     this.chesspieces2 = [];
 
-    this.add_rook(1, new Vector(3, 7));
-    this.add_bishop(1, new Vector(6,7));
-    this.add_queen(1, new Vector(5, 3));
-    this.add_king(1, new Vector(1, 7));
-    this.add_pawn(1, new Vector(0, 3));
-    this.add_queen(2, new Vector(2, 2));
+    this.add_rook(1, new Vector(0, 7));
+    this.add_rook(1, new Vector(7, 7));
+    this.add_knight(1, new Vector(1, 7));
+    this.add_knight(1, new Vector(6, 7));
+    this.add_bishop(1, new Vector(2, 7));
+    this.add_bishop(1, new Vector(5, 7));
+    this.add_queen(1, new Vector(3, 7));
+    this.add_king(1, new Vector(4, 7));
+
+    this.add_rook(2, new Vector(0, 0));
+    this.add_rook(2, new Vector(7, 0));
     this.add_knight(2, new Vector(1, 0));
     this.add_knight(2, new Vector(6, 0));
-    this.add_pawn(2, new Vector(0, 1));
-    this.add_pawn(2, new Vector(1, 1));
-    this.add_pawn(2, new Vector(2, 1));
+    this.add_bishop(2, new Vector(2, 0));
+    this.add_bishop(2, new Vector(5, 0));
+    this.add_queen(2, new Vector(3, 0));
+    this.add_king(2, new Vector(4, 0));
+
+    this.add_pawns();
   }
 
   add_rook(player, pos) {
@@ -76,6 +84,13 @@ class Chessboard {
       this.chesspieces2.push(chesspiece);
 
     this.chessboard[pos.y][pos.x] = chesspiece;
+  }
+
+  add_pawns() {
+    for (let i = 0; i < 8; i++) {
+      this.add_pawn(1, new Vector(i, 6));
+      this.add_pawn(2, new Vector(i, 1));
+    }
   }
 }
 
