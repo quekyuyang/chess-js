@@ -63,10 +63,8 @@ class Pawn extends ChessPiece {
   }
 
   set pos(pos_new) {
-    if (Vector.diff(pos_new, this._pos).equals(new Vector(0, 2)))
-      this.vulnerable_to_enpassant = true;
-    else
-      this.vulnerable_to_enpassant = false;
+    this.vulnerable_to_enpassant = (this.player == 1 && Vector.diff(pos_new, this._pos).equals(new Vector(0, -2))) ||
+                                   (this.player == 2 && Vector.diff(pos_new, this._pos).equals(new Vector(0, 2)))
     this.has_moved = true;
     this._pos = pos_new;
   }
